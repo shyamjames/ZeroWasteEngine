@@ -1,0 +1,15 @@
+{% if notifications %}
+{% for notif in notifications %}
+<div style="padding: 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem;">
+    <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px;">{{ notif.message }}</div>
+    <div style="font-size: 0.75rem; color: var(--text-muted);">{{ notif.created_at|timesince }} ago</div>
+</div>
+{% endfor %}
+<div style="padding: 8px; text-align: center; font-size: 0.8rem; color: var(--accent);">
+    All marked as read
+</div>
+{% else %}
+<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+    No new notifications
+</div>
+{% endif %}

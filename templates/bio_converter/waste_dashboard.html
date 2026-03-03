@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h1 class="page-title">Waste to Energy Analytics ♻️</h1>
+
+<!-- KPI Cards -->
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px;">
+    <div class="card" style="border-left: 4px solid var(--accent)">
+        <div style="color: var(--text-muted); font-size: 0.9rem;">Total Waste Logged</div>
+        <div style="font-size: 2rem; font-weight: 700;">{{ total_waste }} <span
+                style="font-size: 1rem; font-weight: 500;">kg</span></div>
+    </div>
+    <div class="card" style="border-left: 4px solid #f59e0b">
+        <div style="color: var(--text-muted); font-size: 0.9rem;">Clean Energy Equivalent</div>
+        <div style="font-size: 2rem; font-weight: 700;">{{ total_energy }} <span
+                style="font-size: 1rem; font-weight: 500;">kWh</span></div>
+    </div>
+    <div class="card" style="border-left: 4px solid #8b5cf6">
+        <div style="color: var(--text-muted); font-size: 0.9rem;">Compost Yield Potential</div>
+        <div style="font-size: 2rem; font-weight: 700;">{{ total_compost }} <span
+                style="font-size: 1rem; font-weight: 500;">kg</span></div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+
+    <!-- Logging Form -->
+    <div class="card">
+        <div class="card-title">Log Daily Non-Edible Waste</div>
+        <form hx-post="{% url 'log_waste_htmx' %}" hx-target="#logs-tbody" hx-swap="innerHTML"
+            hx-on::after-request="this.reset()">
+
+            <div class="form-group">
+                <label>Weight (in kg)</label>
+                <input type="number" step="0.1" name="weight_kg" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Waste Category</label>
+                <select name="waste_type" class="form-control">
+                    <option>Mixed Organic</option>
+                    <option>Vegetable Peels</option>
+                    <option>Meat & Bones</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%">Calculate & Log</button>
+            <p style="text-align: center; margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);">
+                Algorithms configured securely by Kochi Corp Admins.
+            </p>
+        </form>
+    </div>
+
+    <!-- Chart & Table Container -->
+    <div class="card" style="display: flex; flex-direction: column;">
+        <div class="card-title">Impact Timeline</div>
+
+        <!-- We will just show the latest raw data logs for now -->
+        <table class="data-table" style="margin-top: auto;">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Waste (kg)</th>
+                    <th>Est. Biogas (m³)</th>
+                    <th>Est. Offset (CO₂ kg)</th>
+                </tr>
+            </thead>
+            <tbody id="logs-tbody">
+                {% include "bio_converter/partials/waste_logs.html" %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- Realtime Chart Update Logic using Alpine/Vanilla JS triggered by HX -->
+<script>
+    document.body.addEventListener("wasteLogged", function () {
+        // Here we could implement a logic to re-fetch chart data.
+        // For aesthetic MVPs, a toast notification or reload of the KPI metric via HTMX OOB swaps is ideal.
+        // Simply reloading the page gracefully updates the KPI cards for the user for now.
+        window.location.reload();
+    });
+</script>
+
+{% endblock %}

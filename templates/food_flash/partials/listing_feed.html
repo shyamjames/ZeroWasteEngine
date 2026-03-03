@@ -1,0 +1,26 @@
+<!-- The Live Feed Rows -->
+{% for listing in listings %}
+<tr>
+    <td>
+        <strong>{{ listing.business.company_name }}</strong><br>
+        <small style="color:var(--text-muted)">{{ listing.location }}</small>
+    </td>
+    <td>{{ listing.food_type }}</td>
+    <td><strong>{{ listing.quantity }}</strong> {{ listing.unit }}</td>
+    <td style="color: {% if listing.pickup_deadline|timeuntil == '0 minutes' %}red{% else %}inherit{% endif %}">
+        {{ listing.pickup_deadline|timeuntil }} left
+    </td>
+    <td>
+        <button class="btn btn-small" hx-post="{% url 'claim_listing_htmx' listing.id %}" hx-target="closest tbody"
+            hx-swap="innerHTML">
+            Claim Food
+        </button>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">
+        No active surplus listings right now. Auto-refreshing... ⏳
+    </td>
+</tr>
+{% endfor %}

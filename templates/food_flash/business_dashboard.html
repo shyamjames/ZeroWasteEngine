@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="page-title">Business Resource Dashboard 🏢</h1>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+
+    <!-- Left Column: Post Form -->
+    <div class="card">
+        <div class="card-title">Flash New Surplus Food</div>
+        <form hx-post="{% url 'create_listing_htmx' %}" hx-target="#my-listings-body" hx-swap="innerHTML"
+            hx-on::after-request="this.reset()">
+
+            <div class="form-group">
+                <label>Food Item Description</label>
+                <input type="text" name="food_type" class="form-control" placeholder="e.g. Veg Meals, Bread" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" name="quantity" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Unit</label>
+                    <select name="unit" class="form-control">
+                        <option>Meals</option>
+                        <option>Kg</option>
+                        <option>Packets</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Pickup Deadline</label>
+                <input type="datetime-local" name="pickup_deadline" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Pickup Location (Floor/Gate)</label>
+                <textarea name="location" class="form-control" rows="2" required></textarea>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%">Post to Live Feed</button>
+        </form>
+    </div>
+
+    <!-- Right Column: My Active Listings -->
+    <div class="card">
+        <div class="card-title">My Recent Listings</div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Food</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="my-listings-body">
+                {% include "food_flash/partials/business_listings.html" %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

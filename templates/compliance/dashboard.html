@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <h1 class="page-title" style="margin-bottom: 0;">Eco-Compliance Hub 🌍</h1>
+    <a href="{% url 'export_csv' %}" class="btn" style="text-decoration: none;">Download Full CSV</a>
+</div>
+
+<!-- Current Month Report Card -->
+<div class="card" style="background: linear-gradient(135deg, var(--sidebar-bg), #0f172a); color: white;">
+    <div style="font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: var(--sidebar-text);">
+        Live Report: <span style="color: white">{{ current.period_start|date:"F Y" }}</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        <div>
+            <div style="color: var(--sidebar-text); font-size: 0.9rem;">Food Redistributed</div>
+            <div style="font-size: 1.8rem; font-weight: 700; color: #10b981;">{{ current.total_redistributed }} <span
+                    style="font-size: 1rem;">kg</span></div>
+        </div>
+        <div>
+            <div style="color: var(--sidebar-text); font-size: 0.9rem;">Waste Diverted</div>
+            <div style="font-size: 1.8rem; font-weight: 700; color: #3b82f6;">{{ current.total_waste }} <span
+                    style="font-size: 1rem;">kg</span></div>
+        </div>
+        <div>
+            <div style="color: var(--sidebar-text); font-size: 0.9rem;">Energy Equivalent</div>
+            <div style="font-size: 1.8rem; font-weight: 700; color: #f59e0b;">{{ current.energy_generated }} <span
+                    style="font-size: 1rem;">kWh</span></div>
+        </div>
+        <div>
+            <div style="color: var(--sidebar-text); font-size: 0.9rem;">Carbon Offset</div>
+            <div style="font-size: 1.8rem; font-weight: 700; color: #8b5cf6;">{{ current.carbon_offset }} <span
+                    style="font-size: 1rem;">kg</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- Historical Data Table -->
+<div class="card">
+    <div class="card-title">Archive: Previous Months</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Redistributed (Meals/Kg)</th>
+                <th>Waste To Energy (kg)</th>
+                <th>Carbon Offset (CO₂ kg)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in history %}
+            <tr>
+                <td><strong>{{ report.period_start|date:"F Y" }}</strong></td>
+                <td>{{ report.total_redistributed }} kg</td>
+                <td>{{ report.total_waste }} kg</td>
+                <td style="color: var(--accent); font-weight: 500;">{{ report.carbon_offset }} kg</td>
+                <td><span class="status-badge" style="background: #e2e8f0; color: var(--text-main)">LOCKED API
+                        DATA</span></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                    No archived reports yet.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

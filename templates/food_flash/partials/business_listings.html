@@ -1,0 +1,26 @@
+{% for listing in listings %}
+<tr>
+    <td>
+        <strong>{{ listing.quantity }} {{ listing.unit }}</strong> of {{ listing.food_type }}
+    </td>
+    <td>{{ listing.pickup_deadline|date:"M d, H:i" }}</td>
+    <td>
+        {% if listing.status == 'AVAILABLE' %}
+        <span class="status-badge status-available">AVAILABLE</span>
+        {% elif listing.status == 'CLAIMED' %}
+        <span class="status-badge status-claimed">CLAIMED</span>
+        <div style="font-size: 0.75rem; margin-top:4px; color: var(--text-muted)">
+            by {{ listing.claim.ngo.ngo_name }}
+        </div>
+        {% else %}
+        <span class="status-badge status-expired">{{ listing.status }}</span>
+        {% endif %}
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 20px;">
+        No history available.
+    </td>
+</tr>
+{% endfor %}

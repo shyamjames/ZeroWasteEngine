@@ -1,0 +1,23 @@
+{% for log in logs %}
+<tr>
+    <td>{{ log.logged_at|date:"M d, Y" }}</td>
+    <td><strong>{{ log.weight_kg }}</strong> <small>kg</small></td>
+
+    {% if log.conversion_output %}
+    <td>~ {{ log.conversion_output.biogas_m3 }} <small>m³</small></td>
+    <td style="color: var(--accent); font-weight: 500;">
+        ↓ {{ log.conversion_output.co2_offset_kg }} <small>kg</small>
+    </td>
+    {% else %}
+    <td colspan="2" style="color: var(--text-muted); font-size: 0.8rem;">
+        Awaiting Calculation Cycle...
+    </td>
+    {% endif %}
+</tr>
+{% empty %}
+<tr>
+    <td colspan="4" style="text-align: center; padding: 20px; color: var(--text-muted)">
+        No waste records logged yet.
+    </td>
+</tr>
+{% endfor %}

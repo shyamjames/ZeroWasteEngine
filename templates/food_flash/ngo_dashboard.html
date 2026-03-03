@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="page-title">Surplus Food Live Feed 🍲</h1>
+
+<div class="card">
+    <div class="card-title">Live Availability Stream</div>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">
+        Auto-updating every 10 seconds. Claim immediately.
+    </p>
+
+    <!-- The HTMX element that polls the server for updates -->
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Location / Business</th>
+                <th>Food Details</th>
+                <th>Quantity</th>
+                <th>Deadline</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody hx-get="{% url 'live_feed' %}" hx-trigger="every 10s">
+            <!-- Initial Load -->
+            <tr>
+                <td colspan="5" style="text-align:center; padding: 20px;">Loading Live Feed...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
